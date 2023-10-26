@@ -14,16 +14,20 @@ def scrape_site():
 
     restaurants_data = []
 
-    restaurants = soup.find_all("div", class_="lunchrestaurant")
+    restaurants = soup.find_all("div", class_="lunchMenuListItem")
 
     for restaurant in restaurants:
         restaurant_name = restaurant.find("h2").text.strip()
-        dishes = restaurant.find_all("div", class_="lunch")
+        dishes = restaurant.find_all("div", class_="dish")
 
         for dish in dishes:
-            dish_data = {}
-            dish_data["Restaurant"] = restaurant_name
-            dish_data["Dish"] = dish.text.strip().replace("\n", " - ")
+            dish_name = dish.find("span", class_="dish__name").text.strip()
+            dish_description = dish.find("span", class_="dish__bottomRow").text.strip()
+            dish_data = {
+                "Restaurant": restaurant_name,
+                "Dish": dish_name,
+                "Description": dish_description
+            }
             restaurants_data.append(dish_data)
 
     return restaurants_data

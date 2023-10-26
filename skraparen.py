@@ -21,14 +21,22 @@ def scrape_site():
         dishes = restaurant.find_all("div", class_="dish")
 
         for dish in dishes:
-            dish_name = dish.find("span", class_="dish__name").text.strip()
-            dish_description = dish.find("span", class_="dish__bottomRow").text.strip()
-            dish_data = {
-                "Restaurant": restaurant_name,
-                "Dish": dish_name,
-                "Description": dish_description
-            }
-            restaurants_data.append(dish_data)
+    dish_name = dish.find("span", class_="dish__name").text.strip()
+
+    # Check if the dish has a description
+    dish_description_element = dish.find("span", class_="dish__bottomRow")
+    if dish_description_element:
+        dish_description = dish_description_element.text.strip()
+    else:
+        dish_description = ""
+
+    dish_data = {
+        "Restaurant": restaurant_name,
+        "Dish": dish_name,
+        "Description": dish_description
+    }
+    restaurants_data.append(dish_data)
+
 
     return restaurants_data
 

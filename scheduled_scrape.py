@@ -1,7 +1,9 @@
 from skraparen import scrape_site
 
 def main():
-    scrape_site()
+    data = scrape_site()
+    for item in data:
+        print(item)
 
 if __name__ == "__main__":
     main()

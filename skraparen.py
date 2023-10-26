@@ -14,31 +14,34 @@ def scrape_site():
 
     restaurants_data = []
 
-    restaurants = soup.find_all("div", class_="lunchMenuListItem")
+    restaurants = soup.find_all("div", class_="lunchrestaurant")
 
     for restaurant in restaurants:
         restaurant_name = restaurant.find("h2").text.strip()
-        dishes = restaurant.find_all("div", class_="dish")
+        dishes = restaurant.find_all("div", class_="lunch")
 
         for dish in dishes:
-    dish_name = dish.find("span", class_="dish__name").text.strip()
+            dish_data = {}
+            dish_name_element = dish.find("span", class_="dish__name")
+            dish_description_element = dish.find("span", class_="dish__bottomRow")
+            
+            # Check if the dish name element exists and get the text
+            if dish_name_element:
+                dish_data["Dish"] = dish_name_element.text.strip()
+            else:
+                dish_data["Dish"] = "No Dish Name Found"
 
-    # Check if the dish has a description
-    dish_description_element = dish.find("span", class_="dish__bottomRow")
-    if dish_description_element:
-        dish_description = dish_description_element.text.strip()
-    else:
-        dish_description = ""
+            # Check if the dish description element exists and get the text
+            if dish_description_element:
+                dish_data["Description"] = dish_description_element.text.strip()
+            else:
+                dish_data["Description"] = "No Description Found"
 
-    dish_data = {
-        "Restaurant": restaurant_name,
-        "Dish": dish_name,
-        "Description": dish_description
-    }
-    restaurants_data.append(dish_data)
-
+            dish_data["Restaurant"] = restaurant_name
+            restaurants_data.append(dish_data)
 
     return restaurants_data
+
 
 @app.route('/get_lunch_data', methods=['GET'])
 def get_lunch_data_endpoint():
